@@ -11,7 +11,7 @@
     <template v-if='isLogin'>
       <h1>Let's share</h1>
       <i class="edit el-icon-edit"></i>
-      <img class="avatar" src="http://cn.gravatar.com/avatar/1?s=128&d=identicon" alt="">          
+      <img class="avatar" src="../assets/o_logo.png" alt="">          
     </template>
   </header>
 </template>
@@ -86,6 +86,16 @@ header.login {
     border-radius: 50%;
     margin-left: 15px;
     margin-right:40px;
+    animation: rotate 2s linear infinite;
+  }
+  @keyframes rotate {
+    0%{
+transform: rotate(0deg)
+    }
+    100%{
+transform: rotate(360deg)
+    }
+
   }
 }
 
