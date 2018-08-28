@@ -8,7 +8,7 @@
             <canvas></canvas>
         </div>
 
-        <section class="articals" v-for="item in articalData">
+        <section class="articals" v-for="item in articalData" :key="item.id">
             <p>{{item.attributes.title}}</p>
             <p>{{item.attributes.content}}</p>
 
