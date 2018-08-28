@@ -6,8 +6,9 @@ import Index from '@/pages/Index/Index'
 // import Detail from '@/pages/Detail/template.vue'
 // import Edit from '@/pages/Edit/template.vue'
 import Create from '@/pages/Create/Create'
-import Register from '@/pages/Register/register'
+import Register from '@/pages/Register/Register'
 import Icon from '@/pages/Icon/Icon'
+import Myartical from '@/pages/Myartical/Myartical'
 // import User from '@/pages/User/template.vue'
 // import My from '@/pages/My/template.vue'
 // import App from '../App'
@@ -37,7 +38,13 @@ export default new Router({
     {
       path:'/create',
       component:Create,
+    },
+    {
+      path:'/myartical',
+      component:Myartical,
+
     }
+
  
   ]
 })

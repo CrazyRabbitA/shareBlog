@@ -33,7 +33,7 @@
           type: 'success'
         }).then(() => {
              this.saveImg(url)
-                    this.$router.push({path: '/'})
+                    this.$router.go(-1)
             
           this.$message({
             type: 'success',

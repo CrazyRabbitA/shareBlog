@@ -44,7 +44,7 @@ export default {
     },
 
     logIn() {
-      console.dir(this.loginData);
+      // console.dir(this.loginData);
       if (
         !this.loginData.some(item => {
           return item.attributes.username == this.username;
@@ -61,6 +61,7 @@ export default {
           ) {    
                let payload={}
     payload.user=this.username
+    payload.password=this.password
     payload.status=true
     this.$store.commit('ifLogin',payload)
     this.$store.commit('setUser',payload)
@@ -70,6 +71,9 @@ export default {
     query.find().then(res => {
       console.dir(res);
     this.$store.commit('saveUrl', res[0].attributes.imgUrl)
+    this.$store.commit('getId',res[0].id)
+    this.$store.commit('setDearName',res[0].attributes.dearName)
+    console.log(this.$store.state.informId)
     });
 
         

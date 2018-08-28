@@ -66,6 +66,7 @@ export default {
             .then(res => {
               let payload = {};
               payload.user = this.username;
+              payload.password=this.password
               payload.status = true;
               this.$store.commit('setUser', payload);
               this.$store.commit('ifLogin', payload);
@@ -81,12 +82,15 @@ export default {
                 })
                 .then(() => {
                   //拿到存储用户基本信息的数据条的id,并且存到状态管理里面
-                  // console.log(this.$store.state.user)
                   var query = new AV.Query(this.$store.state.user);
                   query.find().then(res => {
                     // console.dir(res[0].id)
                     this.$store.commit('getId', res[0].id);
                     // console.dir(this.$store.state)
+                  console.log(this.$store.state.user)
+                  console.log(this.$store.state.informId)
+                  
+
                   });
                 });
 

@@ -4,16 +4,20 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const state = {
-  user: null,
+  user: '',
+  password:'',
   isLogin: false,
   informId: '',
-  iconUrl: ''
+  iconUrl: '',
+  dearName:'',
+
 }
 const getters = {}
 
 const mutations = {
   setUser (state, payload) {
     state.user = payload.user
+    state.password=payload.password
   },
   ifLogin (state, payload) {
     state.isLogin = payload.status
@@ -23,6 +27,9 @@ const mutations = {
   },
   saveUrl (state, url) {
     state.iconUrl = url
+  },
+  setDearName(state,dearName){
+    state.dearName=dearName
   }
 }
 

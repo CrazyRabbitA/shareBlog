@@ -3,7 +3,7 @@
  <section class="item" v-for='blog in blogs' :key="blog.id" :data-blog-id=blog.id>
    <div class="user">
      <img :src="blog.attributes.iconUrl" alt="个人头像" style="width:60px;height:60px;">
-     <p>{{blog.attributes.user}}</p>
+     <p>{{blog.attributes.dearName?blog.attributes.dearName:blog.attributes.user}}</p>
    </div>
    <div class="blog">
      <p class="title">{{blog.attributes.title}}</p>
@@ -51,7 +51,7 @@ import AV from 'leancloud-storage';
   // border: 1px solid #000;
   display:flex;
   .user{
-    padding:5px;
+    padding:5px 5px 5px 20px;
     width: 10wh;
     // border: 1px solid #000;
 img{
