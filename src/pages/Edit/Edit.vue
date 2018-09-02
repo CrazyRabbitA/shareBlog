@@ -1,6 +1,6 @@
 <template>
   <div id="edit">
-    <h1>创建文章</h1>
+    <h1>编辑文章</h1>
     <h3>文章标题</h3>
     <el-input v-model="title" class="title"></el-input>
     <p class="msg">限30个字</p>
@@ -18,6 +18,7 @@
   </div>
 </template>
 <script>
+// import AV from 'leancloud-storage';
 import fetch from '@/components/fetch.js';
 export default {
   data() {
@@ -26,6 +27,8 @@ export default {
       description: '',
       content: '',
       ifShow: true,
+      articalId: '',
+      saveTime: '',
     };
   },
   methods: {
@@ -41,8 +44,9 @@ export default {
         var publishTime = new Date();
         var saveTime = publishTime.getTime();
         fetch
-          .createArtical(
+          .updateArtical(
             this.$store.state.user,
+            this.articalId,
             this.title,
             this.description,
             this.content,
@@ -53,11 +57,24 @@ export default {
             this.ifShow
           )
           .then(() => {
-            this.notice('保存成功', 'success');
-            this.title = '';
-            this.description = '';
-            this.content = '';
-            this.$router.push('/main');
+            this.notice('编辑成功', 'success');
+            fetch.getClassData('allArtical').then(res => {
+              var index = res.findIndex(item => {
+                return item.attributes.saveTime == this.saveTime;
+              });
+              if (index != -1) {
+                var delId = res[index].id;
+                fetch.deleteData('allArtical',delId)
+                .then(
+                  () => {
+                    console.log('已经从allArtical中删除');
+                  },
+                  function(error) {
+                    // 删除失败
+                  }
+                );
+              }
+            });
           });
         if (this.ifShow) {
           fetch.createArtical(
@@ -72,6 +89,9 @@ export default {
             this.ifShow
           );
         }
+        setTimeout(() => {
+          this.$router.push('/main');
+        }, 500);
       } else {
         if (!this.title) {
           this.notice('标题不能为空', 'warning');
@@ -84,6 +104,45 @@ export default {
         }
       }
     },
+    getEditData() {
+      let s = document.location.href;
+      let b = s.indexOf('?');
+      let c = s.substring(b + 1);
+      let d = c.split('&');
+      let e = d.map(item => {
+        return (item = item.split('='));
+      });
+      let params = {};
+      params[e[0][0]] = e[0][1];
+      params[e[1][0]] = e[1][1];
+      params[e[2][0]] = e[2][1];
+      params[e[3][0]] = e[3][1];
+      this.articalId = params.id;
+      // var gg = decodeURIComponent(params.publishTime);
+      // var tt = Date.parse(gg);
+      // this.publishTime = tt;
+
+      // var query = new AV.Query(params.user);
+      // query.get(params.id)
+      fetch.getDetailData(params.user,params.id)
+      .then(
+        res => {
+          console.dir(res);
+          this.title = res.attributes.title;
+          this.description = res.attributes.description;
+          this.content = res.attributes.content;
+          this.ifShow = res.attributes.ifShow;
+          this.saveTime=res.attributes.saveTime
+          //   this.username=this.$store.state.user
+        },
+        function(error) {
+          // 异常处理
+        }
+      );
+    },
+  },
+  created() {
+    this.getEditData();
   },
 };
 </script>   

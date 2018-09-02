@@ -36,3 +36,32 @@ new Vue({
     console.dir(this.$store)
   }
 })
+Vue.filter('formatTime',function(str){
+  var lastDate=new Date(str)
+      var newDate=new Date()
+      var interval=newDate.getTime()-lastDate.getTime()
+      if(interval/1000<30){
+        return '刚刚'
+      }
+      else if(interval/1000<60){
+        return parseInt(interval/1000)+'秒前'
+      }
+      else if(interval/60000<60){
+        return parseInt(interval/60000)+'分钟前'
+      }
+      else if(interval/3600000<24){
+        return parseInt(interval/3600000)+'小时前'
+      }
+      else if(interval/3600000<24){
+        return parseInt(interval/3600000)+'小时前'
+      }
+      else if(interval/86400000<31){
+        return parseInt(interval/86400000)+'天前'
+      }
+      else if(interval/2592000000<12){
+        return parseInt(interval/2592000000)+'个月前'
+      }
+      else{
+        return '一年前'
+      }
+})

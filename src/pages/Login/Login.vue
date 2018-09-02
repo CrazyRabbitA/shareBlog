@@ -1,29 +1,28 @@
 <template>
-    <div id="login">
-        <div class="wrap">
-            <h4>用户名</h4>
-            <el-input v-model="username" placeholder="请输入用户名"></el-input>
-            <h4>密码</h4>
-            <el-input v-model="password" type="password" placeholder="请输入密码"></el-input>
-            <el-button size="medium" @click="logIn" class="log">立即登陆</el-button>
-            <p class="notice">没有账号？
-                <router-link to="/register">注册新用户</router-link>
-            </p>
-        </div>
+  <div id="login">
+    <div class="wrap">
+      <h4>用户名</h4>
+      <el-input v-model="username" placeholder="请输入用户名"></el-input>
+      <h4>密码</h4>
+      <el-input v-model="password" type="password" placeholder="请输入密码"></el-input>
+      <el-button size="medium" @click="logIn" class="log">立即登陆</el-button>
+      <p class="notice">没有账号？
+        <router-link to="/register">注册新用户</router-link>
+      </p>
     </div>
+  </div>
 </template>
 
 <script>
-import AV from 'leancloud-storage';
-
+import fetch from '@/components/fetch.js';
 export default {
   data() {
     return {
       username: '',
       password: '',
       loginData: [],
-      ifLogin:this.$store.state.ifLogin,
-      iconUrl:''
+      ifLogin: this.$store.state.ifLogin,
+      iconUrl: '',
     };
   },
   methods: {
@@ -36,15 +35,12 @@ export default {
     },
 
     getLoginData() {
-      var query = new AV.Query('login');
-      query.find().then(res => {
-        // console.dir(res);
+      fetch.getClassData('logIn').then(res => {
         this.loginData = res;
       });
     },
 
     logIn() {
-      // console.dir(this.loginData);
       if (
         !this.loginData.some(item => {
           return item.attributes.username == this.username;
@@ -58,25 +54,28 @@ export default {
           if (
             item.attributes.username == this.username &&
             item.attributes.password == this.password
-          ) {    
-               let payload={}
-    payload.user=this.username
-    payload.password=this.password
-    payload.status=true
-    this.$store.commit('ifLogin',payload)
-    this.$store.commit('setUser',payload)
-              this.$router.push({ path: '/' });
+          ) {
+            let payload = {};
+            this.$store.commit('ifLogin', 'true');
+            this.$store.commit('setUser', this.username);
+            this.$router.push({ path: '/main' });
             this.notice('登陆成功', 'success');
-                var query = new AV.Query(this.username);
-    query.find().then(res => {
-      console.dir(res);
-    this.$store.commit('saveUrl', res[0].attributes.imgUrl)
-    this.$store.commit('getId',res[0].id)
-    this.$store.commit('setDearName',res[0].attributes.dearName)
-    console.log(this.$store.state.informId)
-    });
-
-        
+            //登录成功后，获取个人信息数据，并存储到store和localStorage里
+            fetch.getClassData(this.username).then(res => {
+              //存到store
+              this.$store.commit('saveUrl', res[0].attributes.iconUrl);
+              this.$store.commit('getId', res[0].id);
+              this.$store.commit('setDearName', res[0].attributes.dearName);
+              //存入localStorage
+              window.localStorage.setItem('ifLogin', 'true');
+              window.localStorage.setItem('setUser', this.username);
+              window.localStorage.setItem('saveUrl', res[0].attributes.iconUrl);
+              window.localStorage.setItem('getId', res[0].id);
+              window.localStorage.setItem(
+                'setDearName',
+                res[0].attributes.dearName
+              );
+            });
           } else if (
             item.attributes.username == this.username &&
             item.attributes.password != this.password
@@ -139,7 +138,7 @@ export default {
     }
     .log {
       color: #149739;
-      width:400px;
+      width: 400px;
     }
     .log:hover {
       color: white;
@@ -152,20 +151,15 @@ export default {
 
 @media screen and (max-width: 460px) {
   .wrap {
+    h4,
+    input,
+    .log,
+    p {
+      width: 270px !important;
+    }
     h4 {
       margin: 10px 0 5px;
-      width: 270px !important;
     }
-    input {
-      width: 270px !important;
-    }
-    .log{
-      width: 270px !important;
-  }
-  p{
-      width: 270px !important;
-
-  }
   }
 }
 </style>

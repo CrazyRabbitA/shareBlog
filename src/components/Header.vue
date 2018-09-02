@@ -13,40 +13,34 @@
       </div>
     </div>
     <div v-if='isLogin' class="isLogin">
-      <router-link to="/" class="logo"> Let's share</router-link>
+      <router-link to="/main" class="logo"> Let's share</router-link>
       <router-link to="create">
         <i class="edit el-icon-edit"></i>
       </router-link>
-      <img class="myIcon" :src="userIcon" alt="我的头像">
-       <div class="menu">
-<span to="" class="set" @click='setName'> 设置昵称</span>
-<router-link to="/icon" class="set"> 修改头像</router-link>
-<span to="" class="set" @click='setPassword'> 修改密码</span>
-<router-link to="/myartical" class="set"> 我的文章</router-link>
-<router-link to="/" class="set"> 注销登陆</router-link>
-
-
-       
-       
-       
-        
-       </div>
+      <img class="myIcon" :src="userIcon" alt="我的头像" @click="show=!show">
     </div>
-   
+
+
+
+
+    <transition name="slide-fade">
+   <Menu  v-if="show" class="showMenu" @hideMask='hide'></Menu>    
+    </transition>
+    <div class="mask" @click="show=!show" v-if="show"></div>
   </header>
 </template>
 <script>
 import AV from 'leancloud-storage';
-
+import Menu from '@/pages/Menu/Menu'
 export default {
   data() {
     return {
-     
+     show:false,
     };
   },
   computed: {
     isLogin() {
-      return this.$store.state.isLogin;
+      return this.$store.state.isLogin=='true';
     },
     userIcon() {
       return this.$store.state.iconUrl
@@ -55,90 +49,24 @@ export default {
     },
   },
   methods:{
-
- 
-       setName() {
-        this.$prompt('请输入您的昵称（只含有汉字、数字、字母、下划线且不能以下划线开头和结尾）', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          inputPattern: /^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/,
-          inputErrorMessage: '昵称格式不正确'
-        }).then(({ value }) => {
-          console.log(this.$store.state.user)
-          console.log(this.$store.state.informId)
-
- var todo = AV.Object.createWithoutData(this.$store.state.user, this.$store.state.informId);
-  todo.set('dearName', value);
-  todo.save();
-this.$store.commit('setDearName',value)
-
-  // var allArtical=AV.Object.extend('allArtical')
-
-          this.$message({
-            type: 'success',
-            message: '你的昵称是: ' + value
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '取消输入'
-          });       
-        });
-      },
-
-     
-
-      
-       setPassword() {
-        this.$prompt('请输入新密码', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-        }).then(({ value }) => {
-          console.log(this.$store.state.user)
-          console.log(this.$store.state.informId)
-          console.log(this.$store.state.password)
-
-//修改个人信息里的密码
- var todo = AV.Object.createWithoutData(this.$store.state.user, this.$store.state.informId);
-  todo.set('password', value);
-  todo.save();
-
-
-//修改login里面的密码,先获取数据表里的id
-   var query = new AV.Query('login');
-    query.find().then(res => {
-      console.dir(res);
-   let userIndex=res.findIndex((item,index)=>{
-return item.attributes.username==this.$store.state.user
-   })
-   console.log(userIndex)
-   let id=res[userIndex].id
-   console.log(id)
-   //拿到id后修改login里的密码
-    var todo = AV.Object.createWithoutData('login', id);
-  todo.set('password', value);
-  todo.save();
-
-    });
-
-  
-
-          this.$message({
-            type: 'success',
-            message: '你的新密码是: ' + value
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '取消输入'
-          });       
-        });
-      }
+    hide(){
+      console.log('隐藏mask')
+      this.show=false
+    }
+  },
+  components:{
+    Menu,
   }
+ 
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
+
+header{
+  position:relative;
+  
+
 .no-login {
   padding: 0 12% 30px 12%;
   background: #149739;
@@ -179,7 +107,6 @@ return item.attributes.username==this.$store.state.user
 }
 
 .isLogin {
-  position:relative;
   display: flex;
   align-items: center;
   background: #149739;
@@ -206,7 +133,7 @@ return item.attributes.username==this.$store.state.user
     cursor: pointer;
     border-radius: 50%;
     margin-left: 15px;
-    margin-right: 40px;
+    margin-right: 10%;
     animation: rotate 4s linear infinite;
   }
   @keyframes rotate {
@@ -217,28 +144,33 @@ return item.attributes.username==this.$store.state.user
       transform: rotate(360deg);
     }
   }
-   .menu{
-    position: absolute;
-    top:100%;
- right:0;
-    display:block;
-    width: 86px;
-    border: 1px solid rgba(0,0,0,.3);
-    text-align:center;
-    box-sizing: border-box;
-    border-radius: 5px;
-    z-index:1000;
-   .set{
-      text-decoration: none;
-    color: #149739;
-    margin:10px 0;
-    font-size:18px;
-   }
-   .set:hover{
-     color:white;
-     background-color: #149739;
-   }
-  }
 }
-
+.showMenu{
+  position:absolute;
+  top:100%;
+  right:8%;
+  z-index:1000;
+}
+  /* 可以设置不同的进入和离开动画 */
+/* 设置持续时间和动画函数 */
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active for below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
+}
+.mask{
+  background-color: transparent;
+  width: 100%;
+  height: 100%;
+  position:fixed;
+  left:0;
+  top:0;
+}
+}
 </style>

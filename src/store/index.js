@@ -5,7 +5,6 @@ Vue.use(Vuex)
 
 const state = {
   user: '',
-  password:'',
   isLogin: false,
   informId: '',
   iconUrl: '',
@@ -15,12 +14,11 @@ const state = {
 const getters = {}
 
 const mutations = {
-  setUser (state, payload) {
-    state.user = payload.user
-    state.password=payload.password
+  setUser (state, user) {
+    state.user = user
   },
-  ifLogin (state, payload) {
-    state.isLogin = payload.status
+  ifLogin (state, status) {
+    state.isLogin = status
   },
   getId (state, id) {
     state.informId = id

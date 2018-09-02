@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import AV from 'leancloud-storage';
+import fetch from '@/components/fetch.js';
 export default {
   data() {
     return {
@@ -25,6 +25,7 @@ export default {
     };
   },
   methods: {
+    //element-ui里的弹框
     notice(content, type) {
       this.$message({
         showClose: true,
@@ -32,10 +33,9 @@ export default {
         type: type,
       });
     },
+    //获取longin数据
     getLoginData() {
-      var query = new AV.Query('login');
-      query.find().then(res => {
-        // console.dir(res);
+      fetch.getClassData('logIn').then(res => {
         this.loginData = res;
       });
     },
@@ -56,59 +56,49 @@ export default {
         if (name.test(this.username) && this.password.length <= 3) {
           this.notice('亲～密码太短啦', 'warning');
         } else if (name.test(this.username) && this.password.length > 3) {
-          var TestObject = AV.Object.extend('login');
-          var testObject = new TestObject();
-          testObject
-            .save({
-              password: this.password,
-              username: this.username,
-            })
-            .then(res => {
-              let payload = {};
-              payload.user = this.username;
-              payload.password=this.password
-              payload.status = true;
-              this.$store.commit('setUser', payload);
-              this.$store.commit('ifLogin', payload);
-              this.$router.push({ path: '/icon' });
-              this.notice('注册成功', 'success');
-
-              var TestObject = AV.Object.extend(this.username);
-              var testObject = new TestObject();
-              testObject
-                .save({
-                  password: this.password,
-                  username: this.username,
-                })
-                .then(() => {
-                  //拿到存储用户基本信息的数据条的id,并且存到状态管理里面
-                  var query = new AV.Query(this.$store.state.user);
-                  query.find().then(res => {
-                    // console.dir(res[0].id)
-                    this.$store.commit('getId', res[0].id);
-                    // console.dir(this.$store.state)
-                  console.log(this.$store.state.user)
-                  console.log(this.$store.state.informId)
-                  
-
-                  });
-                });
-
-              this.getLoginData();
+          fetch.saveInLogin( this.username,this.password).then(res => {
+            this.$store.commit('setUser', this.username);
+            this.$store.commit('ifLogin', 'true');
+            this.$store.commit(
+              'saveUrl',
+              'http://pe45ech9f.bkt.clouddn.com/defaultIcon.jpg'
+            );
+            window.localStorage.setItem('ifLogin', 'true');
+            window.localStorage.setItem('setUser', this.username);
+            window.localStorage.setItem(
+              'saveUrl',
+              'http://pe45ech9f.bkt.clouddn.com/defaultIcon.jpg'
+            );
+            this.$router.push({
+              path: '/icon',
+              query: {
+                regist: true,
+              },
             });
+            this.notice('注册成功', 'success');
+            //注册成功后，新建一个class，class名为注册用户名,并设置username
+            console.log('创建成功')
+            console.log(this.username)
+            fetch.setNewClass(this.username).then(() => {
+              console.log('ddddd')
+              //拿到存储用户个人信息的数据条的id,并且存到状态管理里面
+              fetch.getClassData(this.username).then(res => {
+                this.$store.commit('getId', res[0].id);
+                //因为没有存到localStorage里，刚又有bug了
+                window.localStorage.setItem('getId', res[0].id);
+              });
+            });
+            this.getLoginData();
+          });
         }
       }
     },
   },
   created() {
     this.getLoginData();
-    this.username=''
-    this.password=''
-
   },
 };
 </script>
-
 <style lang="less">
 @import url('../../assets/base.less');
 

@@ -2,8 +2,8 @@
   <div id="myArtical">
     <div class="head">
       <div class="icon">
-        <img :src="this.$store.state.iconUrl" alt="头像">
-        <span>{{this.$store.state.dearName?this.$store.state.dearName:this.$store.state.user}}</span>
+        <img :src="personData.attributes.iconUrl" alt="头像">
+        <span>{{personData.attributes.dearname?personData.attributes.dearname:personData.attributes.username}}</span>
       </div>
     </div>
     <router-link :to="{path:'/artical',query:{
@@ -22,22 +22,12 @@
         </h3>
         <p>{{item.attributes.description}}</p>
         <div class="actions">
-          <router-link :to="{path:'/edit',query:{
-               user:item.attributes.username,
-               id:item.id,
-              publishTime:item.attributes.saveTime,
-               random:Math.random()*100000000
-             }}" class="green">
-            编辑</router-link>
-          <a href="#" class="green" @click.prevent="delateArtical(item.attributes.username,item.id,item.attributes.title)">删除</a>
           <span class="publish">{{item.attributes.saveTime|formatTime}}</span>
-          <span v-if=!item.attributes.ifShow class="ifShow">未发布</span>
         </div>
       </div>
     </router-link>
   </div>
 </template>
-
 <script>
 import fetch from '@/components/fetch.js';
 export default {
@@ -45,14 +35,24 @@ export default {
     return {
       personData: null,
       articalData: null,
-      delId: '',
     };
   },
   methods: {
+    //获取href里的参数
     getData() {
-      fetch.getClassData(this.$store.state.user).then(res => {
+      let s = document.location.href;
+      let b = s.indexOf('?');
+      let c = s.substring(b + 1);
+      let d = c.split('&');
+      let e = d.map(item => {
+        return (item = item.split('='));
+      });
+      let params = {};
+      params[e[0][0]] = e[0][1];
+      params[e[1][0]] = e[1][1];
+      fetch.getClassData(params.user)
+      .then(res => {
         this.personData = res[0];
-        console.log(this.personData);
         this.articalData = res.slice(1).reverse();
       });
     },
@@ -63,40 +63,6 @@ export default {
         month: dateObj.getMonth() + 1,
         year: dateObj.getFullYear(),
       };
-    },
-    delateArtical(user, id, title) {
-      this.$confirm('确定删除该文章吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
-        .then(() => {
-          this.delateFromBase(user, id, title);
-          this.$message({
-            type: 'success',
-            message: '文章删除成功',
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '删除失败',
-          });
-        });
-    },
-    delateFromBase(user, id, title) {
-      //从class里删除
-      fetch.deleteData(user, id).then(() => {
-        this.getData();
-      });
-      //从allArtical里删除
-      fetch.getClassData('allArtical').then(res => {
-        var index = res.findIndex(item => {
-          return item.attributes.title == title;
-        });
-        var delId = res[index].id;
-        fetch.deleteData('allArtical', delId).then(() => {});
-      });
     },
   },
   created() {
@@ -112,6 +78,7 @@ export default {
   .head {
     display: flex;
     width: 100%;
+    // border: 1px solid #000;
     .icon {
       width: 100px;
       text-align: center;
@@ -126,6 +93,7 @@ export default {
   }
   .articals {
     width: 100%;
+    // border: 1px solid #000;
     display: flex;
     margin: 20px 0 0 0;
     text-decoration: none;
