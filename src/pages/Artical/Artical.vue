@@ -4,7 +4,7 @@
       <img :src='iconUrl' :alt="username" :title="username" class="icon">
       <div class="wrap">
         <h3>{{title}}</h3>
-        <p>●{{dearname?dearname:username}} ●发布于{{publishTime|formatTime}}</p>
+        <p>●{{dearname?dearname:username}} ●发布于{{saveTime|formatTime}}</p>
       </div>
     </section>
     <section class="article" v-html="markdown"></section>
@@ -22,7 +22,7 @@ export default {
       articalId: '',
       username: '',
       dearname: '',
-      publishTime: '',
+      saveTime: '',
       iconUrl: '',
     };
   },
@@ -40,14 +40,13 @@ export default {
       params[e[1][0]] = e[1][1];
       params[e[2][0]] = e[2][1];
       this.articalId = params.id;
-      console.dir(params);
       if (params.user != 'allArtical') {
-        fetch.getDetailData(this.$store.state.user, params.id).then(
+        fetch.getDetailData( params.user,params.id).then(
           res => {
             this.title = res.attributes.title;
             this.description = res.attributes.description;
             this.content = res.attributes.content;
-            this.publishTime = res.attributes.publishTime;
+            this.saveTime = res.attributes.saveTime;
             this.iconUrl = this.$store.state.iconUrl;
             this.dearname = this.$store.state.dearName;
             this.username = res.attributes.username;
@@ -62,7 +61,7 @@ export default {
             this.title = res.attributes.title;
             this.description = res.attributes.description;
             this.content = res.attributes.content;
-            this.publishTime = res.attributes.saveTime;
+            this.saveTime = res.attributes.saveTime;
             this.iconUrl = res.attributes.iconUrl;
             this.dearname = res.attributes.dearname;
             this.username = res.attributes.username;

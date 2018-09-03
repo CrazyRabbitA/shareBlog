@@ -20,7 +20,6 @@
   </div>
 </template>
 <script>
-// import AV from 'leancloud-storage';
 import fetch from '@/components/fetch.js';
   export default {
     data(){
@@ -42,7 +41,6 @@ import fetch from '@/components/fetch.js';
     }
   }
 </script>
-
 <style lang='less'>
 .item{
   width: 100%;

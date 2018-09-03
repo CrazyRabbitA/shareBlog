@@ -5,7 +5,7 @@
       <div class="user">
         <img :src="blog.attributes.iconUrl" alt="个人头像" style="width:60px;height:60px;">
         <p>{{blog.attributes.dearname?blog.attributes.dearname:blog.attributes.username}}</p>
-        <span>{{blog.attributes.publishTime|formatTime}}</span>
+        <span>{{blog.attributes.saveTime|formatTime}}</span>
       </div>
       <!-- </div> -->
       <div class="blog">

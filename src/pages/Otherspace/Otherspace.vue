@@ -33,13 +33,14 @@ import fetch from '@/components/fetch.js';
 export default {
   data() {
     return {
-      personData: null,
-      articalData: null,
+      personData:{},
+      articalData: [],
     };
   },
   methods: {
     //获取href里的参数
     getData() {
+
       let s = document.location.href;
       let b = s.indexOf('?');
       let c = s.substring(b + 1);
@@ -54,6 +55,9 @@ export default {
       .then(res => {
         this.personData = res[0];
         this.articalData = res.slice(1).reverse();
+        console.dir(this.personData)
+        console.dir(this.articalData)
+
       });
     },
     splitDate(dataStr) {
@@ -78,7 +82,6 @@ export default {
   .head {
     display: flex;
     width: 100%;
-    // border: 1px solid #000;
     .icon {
       width: 100px;
       text-align: center;
@@ -93,7 +96,6 @@ export default {
   }
   .articals {
     width: 100%;
-    // border: 1px solid #000;
     display: flex;
     margin: 20px 0 0 0;
     text-decoration: none;
