@@ -118,12 +118,6 @@ export default {
       params[e[2][0]] = e[2][1];
       params[e[3][0]] = e[3][1];
       this.articalId = params.id;
-      // var gg = decodeURIComponent(params.publishTime);
-      // var tt = Date.parse(gg);
-      // this.publishTime = tt;
-
-      // var query = new AV.Query(params.user);
-      // query.get(params.id)
       fetch.getDetailData(params.user,params.id)
       .then(
         res => {
