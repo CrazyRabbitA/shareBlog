@@ -46,6 +46,7 @@ export default {
   display: flex;
   .user {
     width: 112px;
+    border-radius:15px;
     text-align: center;
     img {
       border-radius: 50%;
@@ -65,10 +66,14 @@ export default {
       font-size: 12px;
     }
   }
+  .user:hover{
+    background-color: #97c4ea;
+  }
   .blog {
     display: flex;
     flex-direction: column;
     flex: 1;
+    border-radius:10px;
 
     .title {
       font-size: 18px;
