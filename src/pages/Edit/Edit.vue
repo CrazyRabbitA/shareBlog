@@ -18,7 +18,6 @@
   </div>
 </template>
 <script>
-// import AV from 'leancloud-storage';
 import fetch from '@/components/fetch.js';
 export default {
   data() {
@@ -64,15 +63,11 @@ export default {
               });
               if (index != -1) {
                 var delId = res[index].id;
-                fetch.deleteData('allArtical',delId)
-                .then(
-                  () => {
-                    console.log('已经从allArtical中删除');
-                  },
-                  function(error) {
+                fetch
+                  .deleteData('allArtical', delId)
+                  .then(() => {}, function(error) {
                     // 删除失败
-                  }
-                );
+                  });
               }
             });
           });
@@ -118,16 +113,13 @@ export default {
       params[e[2][0]] = e[2][1];
       params[e[3][0]] = e[3][1];
       this.articalId = params.id;
-      fetch.getDetailData(params.user,params.id)
-      .then(
+      fetch.getDetailData(params.user, params.id).then(
         res => {
-          console.dir(res);
           this.title = res.attributes.title;
           this.description = res.attributes.description;
           this.content = res.attributes.content;
           this.ifShow = res.attributes.ifShow;
-          this.saveTime=res.attributes.saveTime
-          //   this.username=this.$store.state.user
+          this.saveTime = res.attributes.saveTime;
         },
         function(error) {
           // 异常处理

@@ -1,10 +1,10 @@
 <template>
-    <div id="selectIcon">
-        <h4>选择我的头像</h4>
-        <div class="wrap">
-            <img :src="url" alt="选择你的头像" v-for="(url,index) in iconUrl" :key="index" style="width:80px;height:80px" class="icon" @click=selectIcon(url)>
-        </div>
+  <div id="selectIcon">
+    <h4>选择我的头像</h4>
+    <div class="wrap">
+      <img :src="url" alt="选择你的头像" v-for="(url,index) in iconUrl" :key="index" style="width:80px;height:80px" class="icon" @click=selectIcon(url)>
     </div>
+  </div>
 </template>
 <script>
 import fetch from '@/components/fetch.js';
@@ -31,7 +31,6 @@ export default {
         type: 'success',
       })
         .then(() => {
-          console.log(window.location.hash);
           this.saveImg(url);
           //如果是从注册页进入该icon页，则选完图标后跳转到main
           //如果从别的页面进入该icon页，选完图标后后退到之前页面
@@ -59,7 +58,12 @@ export default {
       //头像链接保存到store和localStorage
       this.$store.commit('saveUrl', url);
       window.localStorage.setItem('saveUrl', url);
-      fetch.updateData(this.$store.state.user, this.$store.state.informId,'iconUrl', url);
+      fetch.updateData(
+        this.$store.state.user,
+        this.$store.state.informId,
+        'iconUrl',
+        url
+      );
       //更新allArtical里的头像链接
       //首先获取所有allArtical里用户名为当前用户名的数据条的id
       var idArr = [];
@@ -71,7 +75,7 @@ export default {
         });
         //然后更新每个id对应的数据条里的头像链接
         idArr.forEach(item => {
-          fetch.updateData('allArtical', item,'iconUrl',url);
+          fetch.updateData('allArtical', item, 'iconUrl', url);
         });
       });
     },

@@ -56,7 +56,7 @@ export default {
         if (name.test(this.username) && this.password.length <= 3) {
           this.notice('亲～密码太短啦', 'warning');
         } else if (name.test(this.username) && this.password.length > 3) {
-          fetch.saveInLogin( this.username,this.password).then(res => {
+          fetch.saveInLogin(this.username, this.password).then(res => {
             this.$store.commit('setUser', this.username);
             this.$store.commit('ifLogin', 'true');
             this.$store.commit(
@@ -77,10 +77,7 @@ export default {
             });
             this.notice('注册成功', 'success');
             //注册成功后，新建一个class，class名为注册用户名,并设置username
-            console.log('创建成功')
-            console.log(this.username)
             fetch.setNewClass(this.username).then(() => {
-              console.log('ddddd')
               //拿到存储用户个人信息的数据条的id,并且存到状态管理里面
               fetch.getClassData(this.username).then(res => {
                 this.$store.commit('getId', res[0].id);

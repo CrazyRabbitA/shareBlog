@@ -31,12 +31,9 @@ export default {
       )
         .then(({ value }) => {
           //更新个人class里的个人数据里的昵称
-          // console.log('更新昵称')
-          fetch.updateData(this.$store.state.user, this.$store.state.informId,'dearname',value)
-          // console.log('昵称')
-
+          fetch.updateData(this.$store.state.user, this.$store.state.informId)  
           //将刚刚更改的昵称保存到store和localStorage
-          this.$store.commit('setDearName', value);
+          this.$store.commit('setDearName',value)
           window.localStorage.setItem('setDearName', value);
           //更新allArtical里用户名为当前用户名的文章数据条里的dearname
           //首先遍历整个allArtical，找到用户名为当前用户名的所有数据条的id，放到一个空数组里

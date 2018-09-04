@@ -33,14 +33,13 @@ import fetch from '@/components/fetch.js';
 export default {
   data() {
     return {
-      personData:{},
+      personData: {},
       articalData: [],
     };
   },
   methods: {
     //获取href里的参数
     getData() {
-
       let s = document.location.href;
       let b = s.indexOf('?');
       let c = s.substring(b + 1);
@@ -51,13 +50,9 @@ export default {
       let params = {};
       params[e[0][0]] = e[0][1];
       params[e[1][0]] = e[1][1];
-      fetch.getClassData(params.user)
-      .then(res => {
+      fetch.getClassData(params.user).then(res => {
         this.personData = res[0];
         this.articalData = res.slice(1).reverse();
-        console.dir(this.personData)
-        console.dir(this.articalData)
-
       });
     },
     splitDate(dataStr) {

@@ -41,15 +41,17 @@ export default {
       params[e[2][0]] = e[2][1];
       this.articalId = params.id;
       if (params.user != 'allArtical') {
-        fetch.getDetailData(params.user,params.id).then(
+        fetch.getDetailData(params.user, params.id).then(
           res => {
             this.title = res.attributes.title;
             this.description = res.attributes.description;
             this.content = res.attributes.content;
             this.saveTime = res.attributes.saveTime;
-            this.iconUrl = res.attributes.iconUrl;
-            this.dearname = res.attributes.dearname;
             this.username = res.attributes.username;
+            fetch.getClassData(params.user).then(res => {
+              this.dearname = res[0].attributes.dearname;
+              this.iconUrl = res[0].attributes.iconUrl;
+            });
           },
           function(error) {
             // 异常处理

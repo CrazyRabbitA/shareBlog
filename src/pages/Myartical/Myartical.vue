@@ -52,7 +52,6 @@ export default {
     getData() {
       fetch.getClassData(this.$store.state.user).then(res => {
         this.personData = res[0];
-        console.log(this.personData);
         this.articalData = res.slice(1).reverse();
       });
     },
