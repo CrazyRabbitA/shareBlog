@@ -41,14 +41,14 @@ export default {
       params[e[2][0]] = e[2][1];
       this.articalId = params.id;
       if (params.user != 'allArtical') {
-        fetch.getDetailData( params.user,params.id).then(
+        fetch.getDetailData(params.user,params.id).then(
           res => {
             this.title = res.attributes.title;
             this.description = res.attributes.description;
             this.content = res.attributes.content;
             this.saveTime = res.attributes.saveTime;
-            this.iconUrl = this.$store.state.iconUrl;
-            this.dearname = this.$store.state.dearName;
+            this.iconUrl = res.attributes.iconUrl;
+            this.dearname = res.attributes.dearName;
             this.username = res.attributes.username;
           },
           function(error) {
