@@ -1,7 +1,7 @@
 # share
 
 > A Vue.js project
-
+预览链接：https://crazyrabbita.github.io/shareBlog-preview/#/
 ## Build Setup
 
 ``` bash
