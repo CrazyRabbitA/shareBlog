@@ -48,7 +48,7 @@ export default {
             this.content = res.attributes.content;
             this.saveTime = res.attributes.saveTime;
             this.iconUrl = res.attributes.iconUrl;
-            this.dearname = res.attributes.dearName;
+            this.dearname = res.attributes.dearname;
             this.username = res.attributes.username;
           },
           function(error) {
